@@ -193,11 +193,11 @@ public class VentanaEstDispDev extends javax.swing.JFrame {
 
             },
             new String [] {
-                "idDisp", "Estado"
+                "idDisp", "Estado", "FechEst"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true
+                false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -215,6 +215,7 @@ public class VentanaEstDispDev extends javax.swing.JFrame {
         if (estTab.getColumnModel().getColumnCount() > 0) {
             estTab.getColumnModel().getColumn(0).setResizable(false);
             estTab.getColumnModel().getColumn(1).setResizable(false);
+            estTab.getColumnModel().getColumn(2).setResizable(false);
         }
 
         javax.swing.GroupLayout bg2Layout = new javax.swing.GroupLayout(bg2);
@@ -382,23 +383,33 @@ public class VentanaEstDispDev extends javax.swing.JFrame {
         
         try{
             
-            stmnt = c.prepareCall("SELECT * FROM estPerifComp(?)");
             
             for(int i = 0; i < idComp.length; i++){
-                fila    = new Object[2];
-                fila[0] = idComp[i] + "";
-                fila[1] = "Funcional";
-                modelo.addRow(fila);
+                stmnt = c.prepareCall("SELECT * FROM estUnDisp(?)");
+                stmnt.setInt(1, idComp[i]);
+                stmnt.execute();
                 
+                rs = stmnt.getResultSet();
+                
+                if(rs.next()){
+                    fila    = new Object[3];
+                    fila[0] = idComp[i] + "";
+                    fila[1] = rs.getString("nomEst");
+                    fila[2] = rs.getString("fechEst");
+                    modelo.addRow(fila);
+                }
+                
+                stmnt = c.prepareCall("SELECT * FROM estPerifComp(?)");
+ 
                 stmnt.setInt(1, idComp[i]);
                 stmnt.execute();
                 
                 rs = stmnt.getResultSet();
                 while(rs.next()){
-                    fila    = new Object[2];
+                    fila    = new Object[3];
                     fila[0] = rs.getString("idDisp");
                     fila[1] = rs.getString("nomEst");
-                    
+                    fila[2] = rs.getString("fechEst");
                     modelo.addRow(fila);
                 }
             }
