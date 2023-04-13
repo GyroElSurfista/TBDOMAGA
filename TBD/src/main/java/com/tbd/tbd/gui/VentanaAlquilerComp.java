@@ -74,7 +74,7 @@ public class VentanaAlquilerComp extends javax.swing.JFrame {
         fechFinTxtBox = new javax.swing.JTextField();
         fechIniTxtBox = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
         setUndecorated(true);
         setResizable(false);

@@ -71,7 +71,7 @@ public class VentanaDevAlquiler extends javax.swing.JFrame {
         selecTab = new javax.swing.JTable();
         fechActTxtBox = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
         setUndecorated(true);
         setResizable(false);

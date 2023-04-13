@@ -17,7 +17,7 @@ public class Conexion {
         conn = null;
         try {
             // URL de conexión
-            String url = "jdbc:postgresql://192.168.40.128:5432/compuss";
+            String url = "jdbc:postgresql://192.168.40.128:5432/compusf";
             // Nombre de usuario y contraseña
             String user = "tbd";
             String password = "tbd";

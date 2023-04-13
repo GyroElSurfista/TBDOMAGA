@@ -8,36 +8,36 @@ package com.tbd.tbd.gui;
 
 import com.tbd.tbd.usuarios.Usuario;
 import java.awt.Color;
-import java.sql.CallableStatement;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 
-/**
- *
- * @author Jairo
- */
-public class VentanaEstDisp extends javax.swing.JFrame {
+public class VentanaMostImg extends javax.swing.JFrame {
 
    
     private Usuario usr;
     private Connection c;
+    private VentanaRegistroComp origen;
     private int mouseX, mouseY;
     
-    public VentanaEstDisp(Usuario usr, Connection c) {
+    public VentanaMostImg(Usuario usr, Connection c) {
         setLookAndFeel();
         initComponents();
         this.usr = usr;
         this.c = c;
-        setTable();
         cargarVentana();
-        
-        
     }
 
     /**
@@ -55,17 +55,17 @@ public class VentanaEstDisp extends javax.swing.JFrame {
         exitLbl = new javax.swing.JLabel();
         recPanel = new javax.swing.JPanel();
         recLbl = new javax.swing.JLabel();
-        msjLbl = new javax.swing.JLabel();
         bg2 = new javax.swing.JPanel();
-        aceptarBtn = new javax.swing.JPanel();
-        aceptarLbl = new javax.swing.JLabel();
-        estDispLbl = new javax.swing.JLabel();
-        estSP = new javax.swing.JScrollPane();
-        estTab = new javax.swing.JTable();
-        buscDispTxtBox = new javax.swing.JTextField();
-        buscarBtn = new javax.swing.JPanel();
-        buscarLbl = new javax.swing.JLabel();
-        fechTxtBox = new javax.swing.JTextField();
+        ramLbl = new javax.swing.JLabel();
+        idDispTxtBox = new javax.swing.JTextField();
+        imgSP = new javax.swing.JScrollPane();
+        fotoTab = new javax.swing.JTable();
+        nImgBtn = new javax.swing.JPanel();
+        nImgLbl = new javax.swing.JLabel();
+        nImgBtn2 = new javax.swing.JPanel();
+        nImgLbl2 = new javax.swing.JLabel();
+        fotoPanel = new javax.swing.JPanel();
+        imgLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
@@ -168,17 +168,12 @@ public class VentanaEstDisp extends javax.swing.JFrame {
             .addComponent(recLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        msjLbl.setFont(new java.awt.Font("Inter", 1, 18)); // NOI18N
-        msjLbl.setText("Estados Actualizados Exitosamente");
-
         javax.swing.GroupLayout barLayout = new javax.swing.GroupLayout(bar);
         bar.setLayout(barLayout);
         barLayout.setHorizontalGroup(
             barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, barLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(msjLbl)
-                .addGap(140, 140, 140)
                 .addComponent(recPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(exitB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -190,160 +185,155 @@ public class VentanaEstDisp extends javax.swing.JFrame {
                 .addContainerGap(8, Short.MAX_VALUE)
                 .addGroup(barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(exitB, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(recPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(msjLbl, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(recPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         bg2.setBackground(new java.awt.Color(31, 31, 31));
 
-        aceptarBtn.setBackground(new java.awt.Color(255, 255, 255));
+        ramLbl.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ramLbl.setForeground(new java.awt.Color(255, 255, 255));
+        ramLbl.setText("IDCOMPUTADORA:");
 
-        aceptarLbl.setFont(new java.awt.Font("Inter", 1, 14)); // NOI18N
-        aceptarLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        aceptarLbl.setText("Aceptar");
-        aceptarLbl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        aceptarLbl.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                aceptarLblMouseClicked(evt);
+        idDispTxtBox.setFont(new java.awt.Font("Inter", 0, 12)); // NOI18N
+        idDispTxtBox.setForeground(new java.awt.Color(204, 204, 204));
+        idDispTxtBox.setBorder(null);
+        idDispTxtBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                idDispTxtBoxFocusGained(evt);
+            }
+        });
+        idDispTxtBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idDispTxtBoxActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout aceptarBtnLayout = new javax.swing.GroupLayout(aceptarBtn);
-        aceptarBtn.setLayout(aceptarBtnLayout);
-        aceptarBtnLayout.setHorizontalGroup(
-            aceptarBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(aceptarLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-        );
-        aceptarBtnLayout.setVerticalGroup(
-            aceptarBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(aceptarLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-        );
-
-        estDispLbl.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        estDispLbl.setForeground(new java.awt.Color(255, 255, 255));
-        estDispLbl.setText("ESTADO DE LOS DISPOSITIVOS:");
-
-        estTab.setFont(new java.awt.Font("Inter", 0, 12)); // NOI18N
-        estTab.setModel(new javax.swing.table.DefaultTableModel(
+        fotoTab.setFont(new java.awt.Font("Inter", 0, 12)); // NOI18N
+        fotoTab.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "idDisp", "Estado", "fechEst"
+                "idFoto", "Descripcion"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        estTab.setFocusable(false);
-        estTab.setGridColor(new java.awt.Color(167, 167, 167));
-        estTab.setRowHeight(30);
-        estTab.setSelectionBackground(new java.awt.Color(147, 147, 147));
-        estTab.setSelectionForeground(new java.awt.Color(255, 255, 255));
-        estTab.setShowHorizontalLines(true);
-        estTab.getTableHeader().setReorderingAllowed(false);
-        estSP.setViewportView(estTab);
-        if (estTab.getColumnModel().getColumnCount() > 0) {
-            estTab.getColumnModel().getColumn(0).setResizable(false);
-            estTab.getColumnModel().getColumn(1).setResizable(false);
-            estTab.getColumnModel().getColumn(2).setResizable(false);
+        fotoTab.setFocusable(false);
+        fotoTab.setGridColor(new java.awt.Color(167, 167, 167));
+        fotoTab.setRowHeight(30);
+        fotoTab.setSelectionBackground(new java.awt.Color(147, 147, 147));
+        fotoTab.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        fotoTab.setShowHorizontalLines(true);
+        fotoTab.getTableHeader().setReorderingAllowed(false);
+        imgSP.setViewportView(fotoTab);
+        if (fotoTab.getColumnModel().getColumnCount() > 0) {
+            fotoTab.getColumnModel().getColumn(0).setResizable(false);
+            fotoTab.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        buscDispTxtBox.setFont(new java.awt.Font("Inter", 0, 12)); // NOI18N
-        buscDispTxtBox.setForeground(new java.awt.Color(204, 204, 204));
-        buscDispTxtBox.setText("Buscar Dispositivo");
-        buscDispTxtBox.setBorder(null);
-        buscDispTxtBox.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                buscDispTxtBoxFocusGained(evt);
-            }
-        });
-        buscDispTxtBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buscDispTxtBoxActionPerformed(evt);
-            }
-        });
+        nImgBtn.setBackground(new java.awt.Color(255, 255, 255));
 
-        buscarBtn.setBackground(new java.awt.Color(255, 255, 255));
-
-        buscarLbl.setFont(new java.awt.Font("Inter", 1, 14)); // NOI18N
-        buscarLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        buscarLbl.setText("Buscar");
-        buscarLbl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        buscarLbl.addMouseListener(new java.awt.event.MouseAdapter() {
+        nImgLbl.setFont(new java.awt.Font("Inter", 1, 14)); // NOI18N
+        nImgLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nImgLbl.setText("Mostrar");
+        nImgLbl.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        nImgLbl.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                buscarLblMouseClicked(evt);
+                nImgLblMouseClicked(evt);
             }
         });
 
-        javax.swing.GroupLayout buscarBtnLayout = new javax.swing.GroupLayout(buscarBtn);
-        buscarBtn.setLayout(buscarBtnLayout);
-        buscarBtnLayout.setHorizontalGroup(
-            buscarBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(buscarLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+        javax.swing.GroupLayout nImgBtnLayout = new javax.swing.GroupLayout(nImgBtn);
+        nImgBtn.setLayout(nImgBtnLayout);
+        nImgBtnLayout.setHorizontalGroup(
+            nImgBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nImgLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
         );
-        buscarBtnLayout.setVerticalGroup(
-            buscarBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(buscarLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+        nImgBtnLayout.setVerticalGroup(
+            nImgBtnLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nImgLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
         );
 
-        fechTxtBox.setFont(new java.awt.Font("Inter", 0, 12)); // NOI18N
-        fechTxtBox.setForeground(new java.awt.Color(204, 204, 204));
-        fechTxtBox.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        fechTxtBox.setText("AAAA-MM-DD");
-        fechTxtBox.setBorder(null);
-        fechTxtBox.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                fechTxtBoxFocusGained(evt);
+        nImgBtn2.setBackground(new java.awt.Color(255, 255, 255));
+
+        nImgLbl2.setFont(new java.awt.Font("Inter", 1, 14)); // NOI18N
+        nImgLbl2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        nImgLbl2.setText("Buscar");
+        nImgLbl2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        nImgLbl2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nImgLbl2MouseClicked(evt);
             }
         });
-        fechTxtBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fechTxtBoxActionPerformed(evt);
-            }
-        });
+
+        javax.swing.GroupLayout nImgBtn2Layout = new javax.swing.GroupLayout(nImgBtn2);
+        nImgBtn2.setLayout(nImgBtn2Layout);
+        nImgBtn2Layout.setHorizontalGroup(
+            nImgBtn2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nImgLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+        );
+        nImgBtn2Layout.setVerticalGroup(
+            nImgBtn2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(nImgLbl2, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+        );
+
+        imgLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        imgLbl.setText("img");
+
+        javax.swing.GroupLayout fotoPanelLayout = new javax.swing.GroupLayout(fotoPanel);
+        fotoPanel.setLayout(fotoPanelLayout);
+        fotoPanelLayout.setHorizontalGroup(
+            fotoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(imgLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+        );
+        fotoPanelLayout.setVerticalGroup(
+            fotoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(imgLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout bg2Layout = new javax.swing.GroupLayout(bg2);
         bg2.setLayout(bg2Layout);
         bg2Layout.setHorizontalGroup(
             bg2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bg2Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(bg2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(estDispLbl)
-                    .addComponent(estSP, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
+                .addGroup(bg2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(nImgBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imgSP, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bg2Layout.createSequentialGroup()
+                        .addComponent(ramLbl)
+                        .addGap(18, 18, 18)
+                        .addComponent(idDispTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(nImgBtn2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(bg2Layout.createSequentialGroup()
-                        .addComponent(buscDispTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(buscarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(121, 121, 121)
-                        .addComponent(fechTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(aceptarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(2, 31, Short.MAX_VALUE))
+                        .addComponent(fotoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(108, 108, 108)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         bg2Layout.setVerticalGroup(
             bg2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bg2Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(estDispLbl)
-                .addGap(18, 18, 18)
-                .addComponent(estSP, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+            .addGroup(bg2Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
                 .addGroup(bg2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(bg2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(aceptarBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buscDispTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(fechTxtBox))
-                    .addGroup(bg2Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(buscarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(27, 27, 27))
+                    .addComponent(nImgBtn2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(bg2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ramLbl)
+                        .addComponent(idDispTxtBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20)
+                .addComponent(imgSP, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(nImgBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addComponent(fotoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
         );
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
@@ -352,9 +342,9 @@ public class VentanaEstDisp extends javax.swing.JFrame {
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(bar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                .addContainerGap(40, Short.MAX_VALUE)
+                .addContainerGap(24, Short.MAX_VALUE)
                 .addComponent(bg2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
+                .addGap(36, 36, 36))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -362,18 +352,18 @@ public class VentanaEstDisp extends javax.swing.JFrame {
                 .addComponent(bar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(bg2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, 754, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(bg, javax.swing.GroupLayout.DEFAULT_SIZE, 807, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(bg, javax.swing.GroupLayout.PREFERRED_SIZE, 723, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(bg, javax.swing.GroupLayout.DEFAULT_SIZE, 590, Short.MAX_VALUE)
         );
 
         pack();
@@ -410,44 +400,6 @@ public class VentanaEstDisp extends javax.swing.JFrame {
         exitB.setBackground(new Color(237,241,214));
     }//GEN-LAST:event_exitLblMouseExited
 
-    private void aceptarLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aceptarLblMouseClicked
-        int filas;
-        CallableStatement stmnt;
-        Date fech;
-        
-        filas = estTab.getRowCount();
-        
-        if(filas > 0){
-            fech = Date.valueOf(fechTxtBox.getText());
-            try{
-                
-                for(int i = 0; i < filas; i++){
-                    stmnt = c.prepareCall("SELECT * FROM setEstDisp(?,?,?)");
-                    stmnt.setInt(1, Integer.parseInt((String)estTab.getValueAt(i, 0)));
-                    stmnt.setString(2, (String)estTab.getValueAt(i,1));
-                    stmnt.setDate(3, fech);
-                    stmnt.execute();
-                }
-                msjLbl.setVisible(true);
-            }catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-    }//GEN-LAST:event_aceptarLblMouseClicked
-
-    private void buscDispTxtBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_buscDispTxtBoxFocusGained
-        buscDispTxtBox.setForeground(Color.black);
-    }//GEN-LAST:event_buscDispTxtBoxFocusGained
-
-    private void buscDispTxtBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscDispTxtBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buscDispTxtBoxActionPerformed
-
-    private void buscarLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarLblMouseClicked
-        estUnDisp();
-    }//GEN-LAST:event_buscarLblMouseClicked
-
     private void recLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recLblMouseClicked
         cargarVentana();
     }//GEN-LAST:event_recLblMouseClicked
@@ -468,85 +420,128 @@ public class VentanaEstDisp extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_recPanelMouseExited
 
-    private void fechTxtBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_fechTxtBoxFocusGained
-        fechTxtBox.setForeground(Color.black);
-    }//GEN-LAST:event_fechTxtBoxFocusGained
+    private void idDispTxtBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_idDispTxtBoxFocusGained
+        idDispTxtBox.setForeground(Color.black);
+    }//GEN-LAST:event_idDispTxtBoxFocusGained
 
-    private void fechTxtBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechTxtBoxActionPerformed
+    private void idDispTxtBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idDispTxtBoxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_fechTxtBoxActionPerformed
+    }//GEN-LAST:event_idDispTxtBoxActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void nImgLblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nImgLblMouseClicked
+        int f;
+        ResultSet rs;
+        PreparedStatement stmnt;
+        InputStream is;
+        BufferedImage bImg;
+        ImageIcon auxIcon, icono;
+        Image imgAux, img;
+        
+        f = fotoTab.getSelectedRow();
+        
+        if(f >= 0){
+            try {
+                stmnt = c.prepareCall("SELECT imgFoto FROM Fotografia WHERE idFoto = ?");
+                stmnt.setInt(1,Integer.parseInt((String)fotoTab.getValueAt(f, 0)));
+                stmnt.execute();
+                
+                rs = stmnt.getResultSet();
+                
+                if(rs.next()){
+                    is = rs.getBinaryStream("imgFoto");
+                    
+                    try {
+                        bImg = ImageIO.read(is);
+                        
+                        auxIcon = new ImageIcon(bImg);
+                        
+                        imgAux = auxIcon.getImage();
+                        
+                        img = imgAux.getScaledInstance(150, 170, java.awt.Image.SCALE_SMOOTH);
+                        
+                        icono = new ImageIcon(img);
+                        
+                        imgLbl.setIcon(icono);
+                        
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaMostImg.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(VentanaMostImg.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            
+        }
+    }//GEN-LAST:event_nImgLblMouseClicked
+
+    private void nImgLbl2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nImgLbl2MouseClicked
+        setFotosComp();
+    }//GEN-LAST:event_nImgLbl2MouseClicked
+
     
+    private ResultSet getFotosComp(){
+        ResultSet rs;
+        PreparedStatement stmnt;
+        
+        rs = null;
+        
+        try{
+         
+            stmnt = c.prepareCall("SELECT * FROM Fotografia WHERE idDisp = ?");
+            
+            stmnt.setInt(1, Integer.parseInt(idDispTxtBox.getText()));
+            stmnt.execute();
+            rs = stmnt.getResultSet();
+           
+        }catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+        
+        return rs;
+    }
     
-    private void setTable(){
-        estTab.getTableHeader().setBackground(new Color(255,255,255));
-        estTab.getTableHeader().setForeground(Color.BLACK);
-        estTab.setRowHeight(30);
+    private void setFotosComp(){
+        ResultSet rs;
+        DefaultTableModel modelo;
+        Object[]          fila;
+        
+        rs = getFotosComp();
+        modelo  = (DefaultTableModel) fotoTab.getModel();
+        
+        modelo.setRowCount(0);
+        try{
+            
+            while(rs.next()){
+                fila    = new Object[2];
+                fila[0] = rs.getString("idFoto");
+                fila[1] = rs.getString("descFoto");
+                modelo.addRow(fila);
+
+            }
+        }catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void clearFotoTab(){
+        DefaultTableModel modelo;
+        modelo  = (DefaultTableModel) fotoTab.getModel();
+        modelo.setRowCount(0);
     }
     
     private void cargarVentana(){
-        estTodosDisp();
-        msjLbl.setVisible(false);
+        clearFotoTab();
+        idDispTxtBox.setText("");
+        imgLbl.setIcon(null);
+        imgLbl.setText("");
+        
     }
-        
-    private void estTodosDisp(){
-        ResultSet rs;
-        CallableStatement stmnt;
-        
-        try{
-            
-            stmnt = c.prepareCall("SELECT * FROM estTodosDisp()");
-            stmnt.execute();
-            rs = stmnt.getResultSet();
-            cargarTabla(rs);
 
-        }catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
-    }
-    
-    private void estUnDisp(){
-        ResultSet rs;
-        CallableStatement stmnt;
-        
-        try{
-            
-            stmnt = c.prepareCall("SELECT * FROM estUnDisp(?)");
-            stmnt.setInt(1, Integer.parseInt(buscDispTxtBox.getText()));
-            stmnt.execute();
-            rs = stmnt.getResultSet();
-            cargarTabla(rs);
-
-        }catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private void cargarTabla(ResultSet rs){
-        Object[]          fila;
-        DefaultTableModel modelo;
-        
-        fila    = new Object[3];
-        modelo  = (DefaultTableModel) estTab.getModel();
-        modelo.setRowCount(0);
-        
-        try {
-            while(rs.next()){
-                fila[0] = rs.getString("idDisp");
-                fila[1] = rs.getString("nomEst");
-                fila[2] = rs.getString("fechEst");
-                
-                modelo.addRow(fila);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(VentanaEstDisp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     private void setLookAndFeel(){
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -556,32 +551,34 @@ public class VentanaEstDisp extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaEstDisp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaMostImg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaEstDisp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaMostImg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaEstDisp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaMostImg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaEstDisp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaMostImg.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel aceptarBtn;
-    private javax.swing.JLabel aceptarLbl;
     private javax.swing.JPanel bar;
     private javax.swing.JPanel bg;
     private javax.swing.JPanel bg2;
-    private javax.swing.JTextField buscDispTxtBox;
-    private javax.swing.JPanel buscarBtn;
-    private javax.swing.JLabel buscarLbl;
-    private javax.swing.JLabel estDispLbl;
-    private javax.swing.JScrollPane estSP;
-    private javax.swing.JTable estTab;
     private javax.swing.JPanel exitB;
     private javax.swing.JLabel exitLbl;
-    private javax.swing.JTextField fechTxtBox;
-    private javax.swing.JLabel msjLbl;
+    private javax.swing.JPanel fotoPanel;
+    private javax.swing.JTable fotoTab;
+    private javax.swing.JTextField idDispTxtBox;
+    private javax.swing.JLabel imgLbl;
+    private javax.swing.JScrollPane imgSP;
+    private javax.swing.JPanel nImgBtn;
+    private javax.swing.JPanel nImgBtn1;
+    private javax.swing.JPanel nImgBtn2;
+    private javax.swing.JLabel nImgLbl;
+    private javax.swing.JLabel nImgLbl1;
+    private javax.swing.JLabel nImgLbl2;
+    private javax.swing.JLabel ramLbl;
     private javax.swing.JLabel recLbl;
     private javax.swing.JPanel recPanel;
     // End of variables declaration//GEN-END:variables

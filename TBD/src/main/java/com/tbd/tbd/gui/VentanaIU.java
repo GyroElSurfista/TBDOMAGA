@@ -62,7 +62,7 @@ public class VentanaIU extends javax.swing.JFrame {
         selecBtn = new javax.swing.JPanel();
         selectLbl = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
         setUndecorated(true);
         setResizable(false);
@@ -341,6 +341,14 @@ public class VentanaIU extends javax.swing.JFrame {
                 ventana = new VentanaEstDisp(usr, c);
                 ventana.setVisible(true);
             
+            }else if(iu.equals("VentanaRegistroComp")){
+                VentanaRegistroComp ventana;
+                ventana = new VentanaRegistroComp(usr, c);
+                ventana.setVisible(true);
+            }else if(iu.equals("VentanaMostImg")){
+                VentanaMostImg ventana;
+                ventana = new VentanaMostImg(usr, c);
+                ventana.setVisible(true);
             }
         }
     }//GEN-LAST:event_selectLblMouseClicked
